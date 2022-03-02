@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 import pygame, sys
 
-from settings import *
+from settings import (WIDTH, HEIGTH, FPS)
+from debug import debug
 
 class Game:
     def __init__(self):
         
         #Ajustes generales
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGH))
+        self.screen = pygame.display.set_mode((WIDTH, HEIGTH))
         self.clock = pygame.time.Clock()
         
     def run(self):
@@ -17,8 +18,11 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                    
+            
+            #Cambiar título de la ventana
+            pygame.display.set_caption('GUAYANDO')
             self.screen.fill('black')
+            debug("Hello :)")
             pygame.display.update()
             self.clock.tick(FPS)
 

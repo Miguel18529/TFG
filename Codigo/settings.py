@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # ajustes del juego
-
-WIDTH    = 1280	
+WIDTH    = 1280 
 HEIGTH   = 720
 FPS      = 60
 TILESIZE = 64
