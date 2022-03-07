@@ -3,6 +3,7 @@ import pygame
 from settings import WORLD_MAP, TILESIZE
 from tile import Tile
 from player import Player
+from enemies import Enemy
 
 from debug import debug
 
@@ -28,6 +29,8 @@ class Level:
                     Tile((x,y), [self.visible_sprites, self.obstacles_sprites])
                 if col == 'p':
                     self.player = Player((x,y), [self.visible_sprites], self.obstacles_sprites)
+                if col == 'e':
+                    self.enemy = Enemy((x, y), [self.visible_sprites], self.obstacles_sprites)
     def run(self):
         #upadte and draw the game
         self.visible_sprites.custom_draw(self.player)
