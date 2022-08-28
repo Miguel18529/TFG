@@ -43,7 +43,7 @@ class Enemy(pygame.sprite.Sprite):
     
     #state (posicion, tipo), ejemplo: ((64, 64), 'w')
     def reward(self, state):
-        rs = {'x': -1, 'w': -0.002, ' ': -0.00001, 'p': 1, 'e': -1, 't': -0.00001, 'd': -0.01}
+        rs = {'x': -1, 'w': -0.02, ' ': -0.00001, 'p': 1, 'e': -1, 't': -0.00001, 'd': -1}
         return rs[state[1]]
         
     def transition(self, state, action):
@@ -177,7 +177,6 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = self.hitbox.center
     
     def moveGVI(self, speed, polit):
-        
         if not polit and self.get_states():
             self.politica = self.GVI()
             self.polit = True
@@ -196,23 +195,19 @@ class Enemy(pygame.sprite.Sprite):
         if polit:
             pos_conv = self.convertir_estado(self.hitbox.x, self.hitbox.y)
             
-            opciones = {((pos_conv[0]+64, pos_conv[1]), (1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]+64, pos_conv[1])],
-                        ((pos_conv[0], pos_conv[1]+64), (0.0, 1.0)): self.p_sin_sprite[(pos_conv[0], pos_conv[1]+64)],
-                        ((pos_conv[0]-64, pos_conv[1]), (-1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]-64, pos_conv[1])],
-                        ((pos_conv[0], pos_conv[1]-64), (0.0, -1.0)): self.p_sin_sprite[(pos_conv[0], pos_conv[1]-64)]}
             
-            opciones2 = {('right', (1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]+64, pos_conv[1])],
+            opciones = {('right', (1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]+64, pos_conv[1])],
                         ('down', (0.0, 1.0)): self.p_sin_sprite[(pos_conv[0], pos_conv[1]+64)],
                         ('left', (-1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]-64, pos_conv[1])],
                         ('up', (0.0, -1.0)): self.p_sin_sprite[(pos_conv[0], pos_conv[1]-64)]}
             mayor = None
             valor = 0
-            for x in opciones2:
-                if opciones2[x] > valor:
+            for x in opciones:
+                if opciones[x] > valor:
                     mayor = x
-                    valor = opciones2[x]
+                    valor = opciones[x]
             
-            t = self.transition((pos_conv, self.get_dic_states()[pos_conv]), mayor[0])
+            
             rand = random.uniform(0,1)
             
             if rand < 0.8:
@@ -328,7 +323,7 @@ class Enemy(pygame.sprite.Sprite):
     def enemy_update(self, player, state_list):
         #self.direction = self.get_player_distance_direction(player)[1]
         self.state_list = state_list
-        #print('que tieneeeees: ', self.state_list)
+        #print(self.state_list)
     
     def update(self):
         self.moveGVI(self.speed, self.polit)
