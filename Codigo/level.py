@@ -36,6 +36,7 @@ class Level:
                 y = index_row *TILESIZE
                 
                 map_list.append(((x,y), col))
+                
                 #Los sprite se ordenan en el orden que maraca esta funcion, eso afecta en la hitbox       
                 if col == 'x':
                     Tile((x,y), [self.visible_sprites, self.obstacles_sprites])

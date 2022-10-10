@@ -45,7 +45,8 @@ class Enemy(pygame.sprite.Sprite):
     def reward(self, state):
         rs = {'x': -1, 'w': -0.02, ' ': -0.00001, 'p': 1, 'e': -1, 't': -0.00001, 'd': -1}
         return rs[state[1]]
-        
+    
+    
     def transition(self, state, action):
         ts = {}
         dic_states = self.get_dic_states()
@@ -128,15 +129,16 @@ class Enemy(pygame.sprite.Sprite):
     
     def get_dic_states(self):
         return {x[0]:x[1]  for x in self.get_states()}
-    
-    def GVI(self):
-        U = {x: self.reward(x) for x in self.get_states()}
+
+    def GVI(self, U_v, U1_v, num_states_below_zero_v):
+        U = U_v
         #print('U inicial: ', U)
-        U1 = {x: self.reward(x) for x in self.get_states()}
-        all_states_changed = False 
-        num_states_below_zero = sum([1 for x in self.get_states() if self.reward(x) < 0])
+        U1 = U1_v
+        all_states_changed = False
+        num_states_below_zero = num_states_below_zero_v
         last_num_states_below_zero = 0
         itera=1
+        tiempo = 1
         while not all_states_changed:
             for (x, y), s in self.get_states():
                 if s != 'x' or s != 'e':
@@ -144,25 +146,31 @@ class Enemy(pygame.sprite.Sprite):
                     
                     maxim = 0
                     for a in self.action():
-                        mija = self.transition(((x, y), s), a)
-                        m = sum([i[1]*U[i[0]] for i in mija])
+                        #mija = self.transition(((x, y), s), a)
+                        #m = sum([i[1]*U[i[0]] for i in mija])
+                        m = sum([i[1]*U[i[0]] for i in self.transition(((x, y), s), a)])
                         if maxim < m:
                             maxim = m
+                        tiempo+=1
                     U1[((x, y), s)] = ri + maxim
             U = U1
             last_num_states_below_zero = num_states_below_zero
+            '''
             for (x, y), s in self.get_states():
+                tiempo+=1
                 if s != 'x' or s != 'e':
                     if U[((x, y), s)] <= 0:
                         if s != 'p':
                             num_states_below_zero += 1
+            '''
+            num_states_below_zero = sum([1 if (s != 'x' or s != 'e') and U[((x, y), s)] <= 0 and s != 'p' else 0 for (x, y), s in self.get_states()])
             
-            if last_num_states_below_zero == num_states_below_zero:
-                all_states_changed = True
+            if last_num_states_below_zero == num_states_below_zero: all_states_changed = True
             itera+=1
         
         #print('U final:, ', U)
         print(itera)
+        print(tiempo)
         return U
         
     def move(self, speed):
@@ -178,7 +186,11 @@ class Enemy(pygame.sprite.Sprite):
     
     def moveGVI(self, speed, polit):
         if not polit and self.get_states():
-            self.politica = self.GVI()
+            U = {x: self.reward(x) for x in self.get_states()}
+            U1 = {x: self.reward(x) for x in self.get_states()}
+            num_states_below_zero = sum([1 for x in self.get_states() if self.reward(x) < 0])
+            
+            self.politica = self.GVI(U, U1, num_states_below_zero)
             self.polit = True
             #self.p_sin_sprite = {(x, y): self.politica[(x, y),s] if s != 'x' else (x, y): 0 for (x, y), s in self.politica}
             for (x, y),s in self.politica:

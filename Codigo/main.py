@@ -5,6 +5,8 @@ from settings import (WIDTH, HEIGTH, FPS)
 
 from level import Level
 
+import time
+
 class Game:
     def __init__(self):
         
@@ -44,6 +46,8 @@ class Game:
         
         self.tiempo_muerto = 0
         
+        self.time_exec = time.time()
+        
     def get_point(self):
         if len(self.level.get_gems()) == self.gemas_iniciales -1:
             self.points += 1
@@ -54,7 +58,7 @@ class Game:
         score_surf = self.test_font.render(f'{current_time}', False, (64, 64, 64))
         self.screen.blit(score_surf, (50, 50))
         self.time = current_time
-        
+    
     def run(self):
         while not self.game_over:
             for event in pygame.event.get():
@@ -120,6 +124,7 @@ class Game:
                 
             pygame.display.update()
             self.clock.tick(FPS)
+        print(time.time() - self.time_exec)
         pygame.quit()
         sys.exit()
 
