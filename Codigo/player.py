@@ -35,6 +35,26 @@ class Player(pygame.sprite.Sprite):
     
         self.defe = False
     
+    def get_pos(self):
+        return (self.convertir_estado(self.rect.x, self.rect.y))
+    
+    def convertir_estado(self, x, y):
+        nueva_x = 0
+        nueva_y = 0
+        i_prev = 0
+        y_ready = False
+        x_ready = False
+        for i in range(0, 768, 64):
+            if x < i and not x_ready:
+                nueva_x = i_prev
+                x_ready = True
+            if y < i and not y_ready:
+                
+                nueva_y = i_prev
+                y_ready = True
+            i_prev = i
+        return (nueva_x, nueva_y)
+    
     def get_type(self):
         return 'player'
     

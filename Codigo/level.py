@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pygame
-from settings import WORLD_MAP, TILESIZE, WORLD_MAP2, MILI, WORLD_MAP10X10,TRASH, WORLD_MAP10X10B, WORLD_MAP10X10T
+from settings import WORLD_MAP, TILESIZE, WORLD_MAP2, MILI, WORLD_MAP10X10,TRASH, WORLD_MAP10X10B, WORLD_MAP10X10T, WORLD_MAP5X5
 from tile import Tile
 from player import Player
 from enemies import Enemy
@@ -60,7 +60,8 @@ class Level:
         self.visible_sprites.custom_draw(self.player)
         self.defe = self.player.get_defe()
         self.visible_sprites.update()
-        self.visible_sprites.enemy_update(self.player, self.state_list)
+        new_state_list = self.update_state_list()
+        self.visible_sprites.enemy_update(self.player, new_state_list)
         
     def get_defe(self):
         return self.defe
@@ -68,6 +69,18 @@ class Level:
     def get_gems(self):
         return self.gem_sprites
     
+    def update_state_list(self):
+        new_state_list = self.state_list
+        pos = self.player.get_pos()
+        for i in range(len(self.state_list)):
+            if self.state_list[i][1] == 'p':
+                new_state_list[i] = (new_state_list[i][0], ' ')
+                
+            if self.state_list[i][0] ==  pos:
+                new_state_list[i] = (pos, 'p')
+        
+        return new_state_list
+        
 #Ordenamos los sprites en el eje Y
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):

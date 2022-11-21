@@ -124,7 +124,7 @@ class Game:
                 
             pygame.display.update()
             self.clock.tick(FPS)
-        print(time.time() - self.time_exec)
+        print('tiempo transcurrido: ', time.time() - self.time_exec)
         pygame.quit()
         sys.exit()
 

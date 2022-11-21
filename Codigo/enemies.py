@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pygame
 import random
+import time
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites, dynamite_sprites, water_sprites):
@@ -32,6 +33,7 @@ class Enemy(pygame.sprite.Sprite):
         self.polit = False
         
         self.p_sin_sprite = {}
+        
     
     #MDP
     def set_state_list(self, state_list):
@@ -47,7 +49,8 @@ class Enemy(pygame.sprite.Sprite):
         return rs[state[1]]
     
     
-    def transition(self, state, action):
+    def transitionL(self, state, action):
+        t = time.time()
         ts = {}
         dic_states = self.get_dic_states()
         #print('d: ', dic_states)
@@ -119,6 +122,83 @@ class Enemy(pygame.sprite.Sprite):
                       (state, 'right'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
                       (state, 'down'): [(((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.8), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1)]}
        
+        #print('t en transicion', time.time() - t)
+        return ts[(state, action)]
+    
+    def transition(self, state, action):
+        t = time.time()
+        ts = {}
+        dic_states = self.get_dic_states()
+        #print('d: ', dic_states)
+        #print('empiezo> ', state)
+        if state[0][0]-64 < 0:
+            #print(1)
+            if state[0][1]+64 > 384:
+                #print(2)
+                ts = {(state, 'up'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.8), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)],
+                      (state, 'left'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)],
+                      (state, 'right'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)],
+                      (state, 'down'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1)]}
+                
+            elif state[0][1]-64 < 0:
+                #print(3)
+                ts = {(state, 'up'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)],
+                      (state, 'left'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'right'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'down'): [(((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1)]}
+            else:
+                #print(4)
+                ts = {(state, 'up'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.8), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)],
+                      (state, 'left'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'right'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'down'): [(((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1)]}
+        
+        elif state[0][0]+64 > 384:
+            #print(5)
+            if state[0][1]+64 > 384:
+                #print(6)
+                ts = {(state, 'up'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1)],
+                      (state, 'left'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)],
+                      (state, 'right'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)],
+                      (state, 'down'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)]}
+           
+            elif state[0][1]-64 < 0:
+                #print(7)
+                ts = {(state, 'up'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1)],
+                      (state, 'left'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'right'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'down'): [(((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.8), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)]}
+            else:
+                #print(8)
+                ts = {(state, 'up'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1)],
+                      (state, 'left'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'right'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'down'): [(((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.8), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)]}
+        else:
+            #print(9, ':', state)
+            if state[0][1]+64 > 384:
+                #print(10)
+                ts = {(state, 'up'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.8), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1)],
+                      (state, 'left'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)],
+                      (state, 'right'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.8), (((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1)],
+                      (state, 'down'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1)]}
+            
+            elif state[0][1]-64 < 0:
+                #print(11, ':', state)
+                ts = {(state, 'up'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.8), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1)],
+                      (state, 'left'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'right'): [(((state[0][0], state[0][1]), dic_states[(state[0][0], state[0][1])]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'down'): [(((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.8), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1)]}
+                #print('ts: ', ts)
+                
+            else:
+                #print(12)
+                ts = {(state, 'up'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.8), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1)],
+                      (state, 'left'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'right'): [(((state[0][0], state[0][1]-64), dic_states[(state[0][0], state[0][1]-64)]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.8), (((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.1)],
+                      (state, 'down'): [(((state[0][0], state[0][1]+64), dic_states[(state[0][0], state[0][1]+64)]), 0.8), (((state[0][0]-64, state[0][1]), dic_states[(state[0][0]-64, state[0][1])]), 0.1), (((state[0][0]+64, state[0][1]), dic_states[(state[0][0]+64, state[0][1])]), 0.1)]}
+       
+        #print('t en transicion', time.time() - t)
         return ts[(state, action)]
     
     def get_states(self):
@@ -131,47 +211,51 @@ class Enemy(pygame.sprite.Sprite):
         return {x[0]:x[1]  for x in self.get_states()}
 
     def GVI(self, U_v, U1_v, num_states_below_zero_v):
-        U = U_v
+        tiempo = time.time()
+        #U = U_v
         #print('U inicial: ', U)
-        U1 = U1_v
+        #U1 = U1_v
         all_states_changed = False
         num_states_below_zero = num_states_below_zero_v
         last_num_states_below_zero = 0
         itera=1
-        tiempo = 1
+        tiempo_t = 1
         while not all_states_changed:
             for (x, y), s in self.get_states():
                 if s != 'x' or s != 'e':
                     ri = self.reward(((x, y), s))
                     
-                    maxim = 0
-                    for a in self.action():
+                    #maxim = 0
+                    #for a in self.action():
                         #mija = self.transition(((x, y), s), a)
                         #m = sum([i[1]*U[i[0]] for i in mija])
-                        m = sum([i[1]*U[i[0]] for i in self.transition(((x, y), s), a)])
-                        if maxim < m:
-                            maxim = m
-                        tiempo+=1
-                    U1[((x, y), s)] = ri + maxim
-            U = U1
+                   #     m = sum([i[1]*U[i[0]] for i in self.transition(((x, y), s), a)])
+                   #     if maxim < m:
+                   #         maxim = m
+                   #     tiempo+=1
+                   
+                    maxim = max([sum([i[1]*U_v[i[0]] for i in self.transition(((x, y), s), a) ]) for a in self.action()])
+                    U1_v[((x, y), s)] = ri + maxim
+            U_v = U1_v
             last_num_states_below_zero = num_states_below_zero
-            '''
-            for (x, y), s in self.get_states():
-                tiempo+=1
-                if s != 'x' or s != 'e':
-                    if U[((x, y), s)] <= 0:
-                        if s != 'p':
-                            num_states_below_zero += 1
-            '''
-            num_states_below_zero = sum([1 if (s != 'x' or s != 'e') and U[((x, y), s)] <= 0 and s != 'p' else 0 for (x, y), s in self.get_states()])
+            
+            #for (x, y), s in self.get_states():
+            #    tiempo+=1
+            #    if s != 'x' or s != 'e':
+            #        if U[((x, y), s)] <= 0:
+            #            if s != 'p':
+            #                num_states_below_zero += 1
+            
+            num_states_below_zero = sum([1 if (s != 'x' or s != 'e') and U_v[((x, y), s)] <= 0 and s != 'p' else 0 for (x, y), s in self.get_states()])
             
             if last_num_states_below_zero == num_states_below_zero: all_states_changed = True
             itera+=1
         
         #print('U final:, ', U)
-        print(itera)
-        print(tiempo)
-        return U
+        print('itera: ', itera)
+        print(tiempo_t)
+        print(time.time() - tiempo)
+        return U_v
         
     def move(self, speed):
         
@@ -185,19 +269,22 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = self.hitbox.center
     
     def moveGVI(self, speed, polit):
-        if not polit and self.get_states():
+        if self.get_states():
             U = {x: self.reward(x) for x in self.get_states()}
             U1 = {x: self.reward(x) for x in self.get_states()}
             num_states_below_zero = sum([1 for x in self.get_states() if self.reward(x) < 0])
             
             self.politica = self.GVI(U, U1, num_states_below_zero)
             self.polit = True
-            #self.p_sin_sprite = {(x, y): self.politica[(x, y),s] if s != 'x' else (x, y): 0 for (x, y), s in self.politica}
-            for (x, y),s in self.politica:
-                if s!='x':
-                    self.p_sin_sprite[(x, y)] = self.politica[(x, y),s]
-                else:
-                    self.p_sin_sprite[(x, y)] = 0.0
+#            self.p_sin_sprite = {(x, y): self.politica[(x, y),s] if s != 'x' else (x, y): 0 for (x, y), s in self.politica}
+            self.p_sin_sprite = {(x, y) : self.politica[(x, y), s] for (x, y), s in self.politica}
+            
+            #for (x, y),s in self.politica:
+            #    if s!='x':
+            #        self.p_sin_sprite[(x, y)] = self.politica[(x, y),s]
+            #    else:
+            #        self.p_sin_sprite[(x, y)] = 0.0
+            
         #print('p: ', self.politica)
         
         #print(self.p_sin_sprite)
@@ -208,18 +295,31 @@ class Enemy(pygame.sprite.Sprite):
             pos_conv = self.convertir_estado(self.hitbox.x, self.hitbox.y)
             
             
-            opciones = {('right', (1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]+64, pos_conv[1])],
+            opciones = {}
+            if pos_conv[0] == 0:
+                opciones = {('right', (1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]+64, pos_conv[1])],
+                        ('down', (0.0, 1.0)): self.p_sin_sprite[(pos_conv[0], pos_conv[1]+64)],
+                        ('left', (-1.0, 0.0)): self.p_sin_sprite[(0, pos_conv[1])],
+                        ('up', (0.0, -1.0)): self.p_sin_sprite[(pos_conv[0], pos_conv[1]-64)]}
+            elif pos_conv[1] == 0:
+                opciones = {('right', (1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]+64, pos_conv[1])],
                         ('down', (0.0, 1.0)): self.p_sin_sprite[(pos_conv[0], pos_conv[1]+64)],
                         ('left', (-1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]-64, pos_conv[1])],
-                        ('up', (0.0, -1.0)): self.p_sin_sprite[(pos_conv[0], pos_conv[1]-64)]}
+                        ('up', (0.0, -1.0)): self.p_sin_sprite[(pos_conv[0], 0)]}
+            else: 
+                opciones = {('right', (1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]+64, pos_conv[1])],
+                            ('down', (0.0, 1.0)): self.p_sin_sprite[(pos_conv[0], pos_conv[1]+64)],
+                            ('left', (-1.0, 0.0)): self.p_sin_sprite[(pos_conv[0]-64, pos_conv[1])],
+                            ('up', (0.0, -1.0)): self.p_sin_sprite[(pos_conv[0], pos_conv[1]-64)]}
             mayor = None
-            valor = 0
+            valor = -10000
             for x in opciones:
                 if opciones[x] > valor:
                     mayor = x
                     valor = opciones[x]
             
             
+            '''
             rand = random.uniform(0,1)
             
             if rand < 0.8:
@@ -229,7 +329,10 @@ class Enemy(pygame.sprite.Sprite):
                 n_mayor = self.mayor_falla(mayor[1][0], mayor[1][1])
                 self.direction.x = n_mayor[0]
                 self.direction.y = n_mayor[1]
+            '''
             
+            self.direction.x = mayor[1][0]
+            self.direction.y = mayor[1][1]
         #print(self.direction)
         self.hitbox.x += self.direction.x * speed
         self.collision('horizontal')
@@ -237,6 +340,9 @@ class Enemy(pygame.sprite.Sprite):
         self.collision('vertical')
         self.rect.center = self.hitbox.center
         self.state = (self.hitbox.x, self.hitbox.y)
+
+  
+
 
     def mayor_falla(self, x, y):
         rand = random.randint(0, 1)
@@ -268,6 +374,7 @@ class Enemy(pygame.sprite.Sprite):
                 y = 0
         return (x, y)
         
+    
     def convertir_estado(self, x, y):
         nueva_x = 0
         nueva_y = 0
