@@ -252,9 +252,9 @@ class Enemy(pygame.sprite.Sprite):
             itera+=1
         
         #print('U final:, ', U)
-        print('itera: ', itera)
-        print(tiempo_t)
-        print(time.time() - tiempo)
+       # print('itera: ', itera)
+       # print(tiempo_t)
+       # print(time.time() - tiempo)
         return U_v
         
     def move(self, speed):

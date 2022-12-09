@@ -26,7 +26,6 @@ class Level:
         
         self.defe = False
         
-        
 
     def create_map(self):
         map_list = []
